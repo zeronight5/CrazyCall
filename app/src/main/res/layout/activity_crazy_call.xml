@@ -12,11 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints=""
+        android:gravity="center"
         android:hint="@string/number" />
     <TextView
         android:id="@+id/count_down"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/count_down"
         />
     <Button

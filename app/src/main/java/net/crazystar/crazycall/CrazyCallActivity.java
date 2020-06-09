@@ -11,19 +11,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import java.util.concurrent.atomic.AtomicInteger;
-
-import io.reactivex.disposables.Disposable;
 
 /**
  * @author jay
@@ -79,9 +73,6 @@ public class CrazyCallActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         handler.removeCallbacksAndMessages(null);
-                        Intent callService = new Intent(CrazyCallActivity.this, CrazyCallService.class);
-                        CrazyCallActivity.this.stopService(callService);
-                        Toast.makeText(CrazyCallActivity.this, "如有需要，请重新开启app", Toast.LENGTH_LONG).show();
                     }
                 });
             }

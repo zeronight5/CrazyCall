@@ -50,7 +50,13 @@ public class MainActivity extends AppCompatActivity {
         Button stop = findViewById(R.id.stop);
         stop.setOnClickListener(v -> {
             Intent callService = new Intent(MainActivity.this, CrazyCallService.class);
-            MainActivity.this.stopService(callService);
+            if (CrazyCallService.isRunning) {
+                MainActivity.this.stopService(callService);
+                stop.setText(R.string.start);
+            } else {
+                MainActivity.this.startService(callService);
+                stop.setText(R.string.stop);
+            }
         });
 
     }

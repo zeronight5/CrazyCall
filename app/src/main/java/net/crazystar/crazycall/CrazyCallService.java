@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
  */
 public class CrazyCallService extends Service {
     private static final String TAG = CrazyCallService.class.getSimpleName();
+    public static volatile boolean isRunning = false;
     private PowerManager.WakeLock wakeLock;
     @Nullable
     @Override
@@ -25,6 +26,7 @@ public class CrazyCallService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        isRunning = true;
         PowerManager systemService = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
         if (systemService != null) {
             wakeLock = systemService.newWakeLock(PowerManager.FULL_WAKE_LOCK, "net.crazystar.crazycall:CrazyCall");
@@ -45,6 +47,7 @@ public class CrazyCallService extends Service {
             wakeLock.release();
         }
         unregisterPhoneStateReceiver();
+        isRunning = false;
     }
 
     @Override
