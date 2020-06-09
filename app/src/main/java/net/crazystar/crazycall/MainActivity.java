@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         call.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(phoneNumber.getText())) {
                 callPhone(phoneNumber.getText().toString());
-                finish();
             } else {
                 Toast.makeText(MainActivity.this, R.string.tip_input_phone_number, Toast.LENGTH_SHORT).show();
             }
