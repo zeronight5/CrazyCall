@@ -6,15 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
-
-import java.util.Set;
 
 /**
  * @author jay
  */
 public class PhoneStateReceiver extends BroadcastReceiver {
+    private static final String TAG = "CRAZY" + PhoneStateReceiver.class.getSimpleName();
     private String currentNumber;
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,12 +33,18 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                                 return;
                             }
                             currentNumber = extras.getString("android.intent.extra.PHONE_NUMBER");
-                            System.out.println("!!!!!!!!" + currentNumber);
+                            Log.d(TAG, "!!!!!!!!" + currentNumber);
                         } else {
-                            Intent crazyCall = new Intent(context, CrazyCallActivity.class);
-                            crazyCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            crazyCall.putExtra("currentNumber", currentNumber);
-                            context.startActivity(crazyCall);
+                            Log.d(TAG, "!!!!!canStart:" + CrazyCallActivity.canStart);
+                            if (!TextUtils.isEmpty(currentNumber) && CrazyCallActivity.canStart) {
+                                CrazyCallActivity.canStart = false;
+                                Log.d(TAG, "!!!!!start CrazyCallActivity!!!!!");
+                                Intent crazyCall = new Intent(context, CrazyCallActivity.class);
+                                crazyCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                crazyCall.putExtra("currentNumber", currentNumber);
+                                currentNumber = null;
+                                context.startActivity(crazyCall);
+                            }
                         }
                         break;
                     default:

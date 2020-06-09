@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,22 +29,26 @@ import io.reactivex.disposables.Disposable;
  * @author jay
  */
 public class CrazyCallActivity extends AppCompatActivity {
+    private static final String TAG = "CRAZY" + CrazyCallActivity.class.getSimpleName();
 
     private String currentNumber;
     private TextView countDownText;
     private AtomicInteger countDownNumber = new AtomicInteger(5);
+
+    public static volatile boolean canStart = true;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    int i = countDownNumber.getAndDecrement();
+                    int i = countDownNumber.decrementAndGet();
                     countDownText.setText(getString(R.string.count_down, i));
                     if (i == 0) {
                         if (!TextUtils.isEmpty(currentNumber)) {
                             callPhone(currentNumber);
-                            finish();
+                            handler.removeCallbacksAndMessages(null);
+                            CrazyCallActivity.this.finish();
                         }
                     } else {
                         handler.sendEmptyMessageDelayed(0, 1000);
@@ -59,6 +64,7 @@ public class CrazyCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crazy_call);
+        Log.d(TAG, "!!!!!!onCreate!!!!!!!");
         Intent intent = getIntent();
         if (intent != null) {
             Bundle extras = intent.getExtras();
@@ -67,7 +73,7 @@ public class CrazyCallActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.current_number)).setText(currentNumber);
                 countDownText = findViewById(R.id.count_down);
                 countDownNumber.set(5);
-                countDownText.setText(getString(R.string.count_down, countDownNumber.getAndDecrement()));
+                countDownText.setText(getString(R.string.count_down, countDownNumber.get()));
                 handler.sendEmptyMessageDelayed(0, 1000);
                 ((Button)findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -94,4 +100,10 @@ public class CrazyCallActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "!!!!!!!!onDestroy!!!!!!!!!");
+        canStart = true;
+    }
 }
